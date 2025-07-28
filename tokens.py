@@ -1,5 +1,5 @@
 from base import BaseWebflowEndpoint
-class WebflowToken:
+class WebflowToken(BaseWebflowEndpoint):
     
 
     def get_authorized_user_info(self):

@@ -1,10 +1,10 @@
 from base import WebflowConnector
 from sites import WebflowSites
-from cms import WebflowCMS
+# from cms import WebflowCMS
 from tokens import WebflowToken
 from forms import WebflowForms
 from users import WebflowUsers
-from webhooks import WebflowWebhooks
+# from webhooks import WebflowWebhooks
 from settings import *
 
 class Webflow:
@@ -26,7 +26,7 @@ class Webflow:
         return WebflowCMS(connector=self.connector)
 
     @property
-    def token_info(self):
+    def tokens(self):
         return WebflowToken(connector=self.connector)
 
     @property

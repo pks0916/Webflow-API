@@ -1,5 +1,5 @@
 from base import BaseWebflowEndpoint
-class WebflowSites:
+class WebflowSites(BaseWebflowEndpoint):
     def __init__(self, connector):
         self.connector = connector
 

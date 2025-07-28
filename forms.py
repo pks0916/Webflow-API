@@ -1,5 +1,5 @@
 from base import BaseWebflowEndpoint
-class Webflowforms:
+class WebflowForms(BaseWebflowEndpoint):
     def list_forms(self, site_id, limit=None, offset=None):
         """
         Returns a list of forms configured on the given Webflow site.
