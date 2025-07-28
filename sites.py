@@ -1,7 +1,6 @@
 from base import BaseWebflowEndpoint
 class WebflowSites(BaseWebflowEndpoint):
-    def __init__(self, connector):
-        self.connector = connector
+    
 
     def list_sites(self):
         """
