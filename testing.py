@@ -8,9 +8,9 @@ import time
 # Initialize the Webflow client
 webflow_client = Webflow(token=WEBFLOW_API_TOKEN)
 """Works"""
-# print(">>> Testing: get_authorized_user_info")
-# authorized_user = webflow_client.tokens.get_authorized_user_info()
-# print("Authorized User Info:", authorized_user)
+print(">>> Testing: get_authorized_user_info")
+authorized_user = webflow_client.tokens.get_authorized_user_info()
+print("Authorized User Info:", authorized_user)
 
 """Error 500. An Internal error occurred"""
 # print(">>> Testing: get_authorization_info")
@@ -187,3 +187,62 @@ print("Get Webhook:", json.dumps(site_details, indent=2))
 #                                                       createdOn=None
 #                                                       )
 # print(f"create_webhook: {create_webhook}")
+
+
+
+print("📄 CMS: List Collections")
+print(webflow_client.cms.list_collections(site_id="67337e69cfb40d801615041f"))
+
+print("📄 CMS: Get Collection Details")
+print(webflow_client.cms.get_collection_details(collection_id="68824bc485caae2f5da59f4d"))
+
+print("🆕 CMS: Create Collection")
+print(webflow_client.cms.create_collection(
+    site_id="67337e69cfb40d801615041f",
+    displayName="Blog Posts",
+    singularName="Blog Post",
+    slug="blog-posts",
+    fields=[
+        {
+            "isRequired": True,
+            "type": "PlainText",
+            "displayName": "Title",
+            "helpText": "Title of the post",
+            "slug": "title"
+        },
+        {
+            "isRequired": True,
+            "type": "RichText",
+            "displayName": "Content",
+            "helpText": "Content body",
+            "slug": "content"
+        }
+    ]
+))
+
+print("❌ CMS: Delete Collection")
+print(webflow_client.cms.delete_collection(collection_id="68824bc485caae2f5da59f4d"))
+
+print("➕ CMS: Create Collection Field")
+print(webflow_client.cms.create_collection_field(
+    collection_id="68824bc485caae2f5da59f4d",
+    type="PlainText",
+    displayName="Subtitle",
+    isRequired=False,
+    helpText="Optional subtitle for post"
+))
+
+print("🛠️ CMS: Update Collection Field")
+print(webflow_client.cms.update_collection_field(
+    collection_id="68824bc485caae2f5da59f4d",
+    field_id="75821f618da60c18383330bcc0ca488b",
+    displayName="Updated Subtitle",
+    helpText="This is the new help text"
+))
+
+print("🗑️ CMS: Delete Collection Field")
+print(webflow_client.cms.delete_collection_field(
+    collection_id="68824bc485caae2f5da59f4d",
+    field_id="75821f618da60c18383330bcc0ca488b"
+))
+
