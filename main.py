@@ -4,7 +4,7 @@ from sites import WebflowSites
 from tokens import WebflowToken
 from forms import WebflowForms
 from users import WebflowUsers
-# from webhooks import WebflowWebhooks
+from webhooks import WebflowWebhooks
 from settings import *
 
 class Webflow:
@@ -21,9 +21,9 @@ class Webflow:
     def sites(self):
         return WebflowSites(connector=self.connector)
 
-    @property
-    def cms(self):
-        return WebflowCMS(connector=self.connector)
+    # @property
+    # def cms(self):
+    #     return WebflowCMS(connector=self.connector)
 
     @property
     def tokens(self):
