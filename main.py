@@ -21,9 +21,9 @@ class Webflow:
     def sites(self):
         return WebflowSites(connector=self.connector)
 
-    # @property
-    # def cms(self):
-    #     return WebflowCMS(connector=self.connector)
+    @property
+    def cms(self):
+        return WebflowCMS(connector=self.connector)
 
     @property
     def tokens(self):

@@ -25,6 +25,7 @@ print("📄 Sites Response:", json.dumps(sites_response, indent=2))
 
 sites_response = webflow_client.sites.list_sites()
 site_list = sites_response.get("sites", [])
+site_id=sites_response["sites"][0]["id"]
 
 if not site_list:
     print("❌ No sites available to test get_site.")
@@ -53,27 +54,27 @@ else:
 
 
 
-# sites_response = webflow_client.sites.list_sites()
-# site_list = sites_response.get("sites", [])
+sites_response = webflow_client.sites.list_sites()
+site_list = sites_response.get("sites", [])
 
-# if not site_list:
-#     print("❌ No sites available to test publish_site.")
-# else:
-#     site_id = site_list[0]["id"]
-#     print(f"✅ Using site_id: {site_id}")
+if not site_list:
+    print("❌ No sites available to test publish_site.")
+else:
+    site_id = site_list[0]["id"]
+    print(f"✅ Using site_id: {site_id}")
 
-#     print(">>> Testing: publish_site (Webflow subdomain only)")
-#     response = webflow_client.sites.publish_site(
-#         site_id=site_id,
-#         publish_to_webflow_subdomain=True
-#     )
-#     print("🚀 Publish Response:", json.dumps(response, indent=2))
+    print(">>> Testing: publish_site (Webflow subdomain only)")
+    response = webflow_client.sites.publish_site(
+        site_id=site_id,
+        publish_to_webflow_subdomain=True
+    )
+    print("🚀 Publish Response:", json.dumps(response, indent=2))
 
 
-site_ID = "67337e69cfb40d801615041f"
+
 
 print("\n>>> Testing: list_forms")
-site_id = site_ID  # Replace with actual site ID
+site_id = site_id  # Replace with actual site ID
 forms_list = webflow_client.forms.list_forms(site_id=site_id)
 print("📄 Forms List:", json.dumps(forms_list, indent=2))
 
@@ -110,7 +111,7 @@ submission_id = "68480e6f5c10d3551d67eaf3"  # ← Replace with what you saw in t
 # print("🗑️ Delete Result:", json.dumps(delete_result, indent=2))
 
 
-site_id = "67337e69cfb40d801615041f"
+
 
 # # ✅ Test: list_users
 # print(">>> Testing: list_users")
@@ -150,42 +151,72 @@ site_id = "67337e69cfb40d801615041f"
 # print("✉️ Invite User Response:", json.dumps(invite_response, indent=2))
 
 """Works"""
-print(">>> Testing: create_webhook")
-create_webhook=webflow_client.webhooks.create_webhook(site_id=site_id,
-                                                      triggerType='form_submission',
-                                                      url='www.workplayapp.com',
-                                                      id=None,
-                                                      workspaceId=None,
-                                                      siteId=None,
-                                                      filter=None,
-                                                      lastTriggered=None,
-                                                      createdOn=None
-                                                      )
-print("Create Webhook:", json.dumps(create_webhook, indent=2))
+# print(">>> Testing: create_webhook")
+# create_webhook=webflow_client.webhooks.create_webhook(site_id=site_id,
+#                                                       triggerType='form_submission',
+#                                                       url='www.workplayapp.com',
+#                                                       id=None,
+#                                                       workspaceId=None,
+#                                                       siteId=None,
+#                                                       filter=None,
+#                                                       lastTriggered=None,
+#                                                       createdOn=None
+#                                                       )
+# print("Create Webhook:", json.dumps(create_webhook, indent=2))
 
-"""Works"""
-print(">>> Testing: list_webhooks")
-list_webhooks = webflow_client.webhooks.list_webhooks(site_id=site_id)
-print("List Webhook:", json.dumps(list_webhooks, indent=2))
+# """Works"""
+# print(">>> Testing: list_webhooks")
+# list_webhooks = webflow_client.webhooks.list_webhooks(site_id=site_id)
+# print("List Webhook:", json.dumps(list_webhooks, indent=2))
 
-webhook_id = list_webhooks["webhooks"][0]["id"]
+# webhook_id = list_webhooks["webhooks"][0]["id"]
 
-"""Works"""
-print(">>> Testing: get_webhook")
-get_webhook=webflow_client.webhooks.get_webhook(webhook_id=webhook_id)
-print("Get Webhook:", json.dumps(get_webhook, indent=2))
+# """Works"""
+# print(">>> Testing: get_webhook")
+# get_webhook=webflow_client.webhooks.get_webhook(webhook_id=webhook_id)
+# print("Get Webhook:", json.dumps(get_webhook, indent=2))
 
-"""Works"""
-print(">>> Testing: remove_webhook")
-remove_webhook=webflow_client.webhooks.remove_webhook(webhook_id=webhook_id)
-print("Remove Webhook:", json.dumps(remove_webhook, indent=2))
+# """Works"""
+# print(">>> Testing: remove_webhook")
+# remove_webhook=webflow_client.webhooks.remove_webhook(webhook_id=webhook_id)
+# print("Remove Webhook:", json.dumps(remove_webhook, indent=2))
 
+
+# print("📄 CMS: List Collections")
+# print(webflow_client.cms.list_collections(site_id="67337e69cfb40d801615041f"))
+
+# print("📄 CMS: Get Collection Details")
+# print(webflow_client.cms.get_collection_details(collection_id="68824bc485caae2f5da59f4d"))
+
+# print("🆕 CMS: Create Collection")
+# print(webflow_client.cms.create_collection(
+#     site_id="67337e69cfb40d801615041f",
+#     displayName="Blog Posts",
+#     singularName="Blog Post",
+#     slug="blog-posts",
+#     fields=[
+#         {
+#             "isRequired": True,
+#             "type": "PlainText",
+#             "displayName": "Title",
+#             "helpText": "Title of the post",
+#             "slug": "title"
+#         },
+#         {
+#             "isRequired": True,
+#             "type": "RichText",
+#             "displayName": "Content",
+#             "helpText": "Content body",
+#             "slug": "content"
+#         }
+#     ]
+# ))
 
 print("📄 CMS: List Collections")
 print(webflow_client.cms.list_collections(site_id="67337e69cfb40d801615041f"))
 
 print("📄 CMS: Get Collection Details")
-print(webflow_client.cms.get_collection_details(collection_id="68824bc485caae2f5da59f4d"))
+print(webflow_client.cms.get_collection_details(collection_id="688117d10b198fe86649383b"))
 
 print("🆕 CMS: Create Collection")
 print(webflow_client.cms.create_collection(
