@@ -47,7 +47,7 @@ class WebflowWebhooks(BaseWebflowEndpoint):
         headers= {"Content-Type": "application/json"}
         payload = {key: value
                    for key, value in locals().items()
-                   if key not in ("self", "site_id", "triggerType", "url") and value is not None and not hasattr(value, "__dict__")
+                   if key not in ("self", "site_id") and value is not None and not hasattr(value, "__dict__")
                    }
         return self.connector.post(
             endpoint= f'/sites/{site_id}/webhooks',
