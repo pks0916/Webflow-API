@@ -22,6 +22,7 @@ print(">>> Testing: list_sites")
 sites_response = webflow_client.sites.list_sites()
 print("📄 Sites Response:", json.dumps(sites_response, indent=2))
 
+site_id = sites_response["sites"][0]["id"]
 
 sites_response = webflow_client.sites.list_sites()
 site_list = sites_response.get("sites", [])
@@ -70,10 +71,10 @@ else:
 #     print("🚀 Publish Response:", json.dumps(response, indent=2))
 
 
-site_ID = "67337e69cfb40d801615041f"
+# site_ID = "67337e69cfb40d801615041f"
 
 print("\n>>> Testing: list_forms")
-site_id = site_ID  # Replace with actual site ID
+site_id = site_id  # Replace with actual site ID
 forms_list = webflow_client.forms.list_forms(site_id=site_id)
 print("📄 Forms List:", json.dumps(forms_list, indent=2))
 
@@ -110,12 +111,12 @@ submission_id = "68480e6f5c10d3551d67eaf3"  # ← Replace with what you saw in t
 # print("🗑️ Delete Result:", json.dumps(delete_result, indent=2))
 
 
-site_id = "67337e69cfb40d801615041f"
+# site_id = "67337e69cfb40d801615041f"
 
-# # ✅ Test: list_users
-# print(">>> Testing: list_users")
-# users = webflow_client.users.list_users(site_id=site_id)
-# print("👥 Users List:", json.dumps(users, indent=2))
+""""✅ Test: list_users"""
+print(">>> Testing: list_users")
+users = webflow_client.users.list_users(site_id=site_id)
+print("👥 Users List:", json.dumps(users, indent=2))
 
 
 # print(">>> Testing: list_access_groups")

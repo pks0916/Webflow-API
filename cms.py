@@ -131,6 +131,46 @@ class WebflowCMS(BaseWebflowEndpoint):
         return self.connector.delete(
             endpoint=f"collections/{collection_id}/fields/{field_id}"
         )
+
+    def list_collection_items(self, collection_id,
+                              cmsLocaleId=None,
+                              offset=None,
+                              limit=None,
+                              name=None,
+                              slug=None,
+                              lastPublished=None,
+                              sortBy=None,
+                              sortOrder=None):
+        query_params = {
+            key: value
+            for key, value in locals().items()
+            if key not in ("self", "collection_id") and value is not None
+        }
+        return self.connector.get(
+            endpoint=f"/collections/{collection_id}/items",
+            query_params=query_params
+        )
+
+    def list_live_collection_items(self, collection_id,
+                                   cmsLocaleId=None,
+                                   offset=None,
+                                   limit=None,
+                                   name=None,
+                                   slug=None,
+                                   lastPublished=None,
+                                   sortBy=None,
+                                   sortOrder=None):
+        query_params = {
+            key: value
+            for key, value in locals().items()
+            if key not in ("self", "collection_id") and value is not None
+        }
+        return self.connector.get(
+            endpoint=f"/collections/{collection_id}/items/live",
+            query_params=query_params
+        )
+
+
     
 
 
