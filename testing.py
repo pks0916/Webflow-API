@@ -87,23 +87,34 @@ print("🔍 Site Details:", json.dumps(site_details, indent=2))
 # submissions = webflow_client.forms.list_form_submissions("6881293d0d3feffe91a6f070", limit=5)
 # print("📨 Submissions:", json.dumps(submissions, indent=2))
 #
+
+"""Works"""
+print(">>> Testing: create_webhook")
+create_webhook=webflow_client.webhooks.create_webhook(site_id=site_id,
+                                                      triggerType='form_submission',
+                                                      url='www.workplayapp.com',
+                                                      id=None,
+                                                      workspaceId=None,
+                                                      siteId=None,
+                                                      filter=None,
+                                                      lastTriggered=None,
+                                                      createdOn=None
+                                                      )
+print("Create Webhook:", json.dumps(create_webhook, indent=2))
+
+"""Works"""
 print(">>> Testing: list_webhooks")
 list_webhooks = webflow_client.webhooks.list_webhooks(site_id=site_id)
-print("List Webhook:", json.dumps(site_details, indent=2))
+print("List Webhook:", json.dumps(list_webhooks, indent=2))
 
+webhook_id = list_webhooks["webhooks"][0]["id"]
+
+"""Works"""
 print(">>> Testing: get_webhook")
-get_webhook=webflow_client.webhooks.get_webhook()
-print("Get Webhook:", json.dumps(site_details, indent=2))
-#
-# print(">>> Testing: create_webhook")
-# create_webhook=webflow_client.webhooks.create_webhook(site_id=site_ID,
-#                                                       triggerType='form_submission',
-#                                                       url='www.workplayapp.com',
-#                                                       id=None,
-#                                                       workspaceId=None,
-#                                                       siteId=None,
-#                                                       filter=None,
-#                                                       lastTriggered=None,
-#                                                       createdOn=None
-#                                                       )
-# print(f"create_webhook: {create_webhook}")
+get_webhook=webflow_client.webhooks.get_webhook(webhook_id=webhook_id)
+print("Get Webhook:", json.dumps(get_webhook, indent=2))
+
+"""Works"""
+print(">>> Testing: remove_webhook")
+remove_webhook=webflow_client.webhooks.remove_webhook(webhook_id=webhook_id)
+print("Remove Webhook:", json.dumps(remove_webhook, indent=2))
