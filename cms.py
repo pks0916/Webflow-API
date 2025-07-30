@@ -134,6 +134,7 @@ class WebflowCMS(BaseWebflowEndpoint):
 
     """The individual methods followed by the combined method underneath
     Not tested"""
+
     # def list_collection_items(self, collection_id,
     #                           cmsLocaleId=None,
     #                           offset=None,
@@ -172,42 +173,44 @@ class WebflowCMS(BaseWebflowEndpoint):
     #         query_params=query_params
     #     )
     """The combined method"""
-    # def list_collection_items(self,
-    #                           collection_id,
-    #                           live: bool = False,
-    #                           cmsLocaleId=None,
-    #                           offset=None,
-    #                           limit=None,
-    #                           name=None,
-    #                           slug=None,
-    #                           lastPublished=None,
-    #                           sortBy=None,
-    #                           sortOrder=None):
+
+    # def list_collection_items(
+    #         self,
+    #         collection_id,
+    #         cmsLocaleId=None,
+    #         offset=None,
+    #         limit=None,
+    #         name=None,
+    #         slug=None,
+    #         lastPublished=None,
+    #         sortBy=None,
+    #         sortOrder=None,
+    #         live: bool = False
+    # ):
     #     """
-    #     Fetch items from a Collection. By default hits the draft endpoint;
-    #     set live=True to hit the /live endpoint.
+    #     List staged or live collection items.
     #
-    #     :param collection_id:  ID of the CMS collection
-    #     :param live:           False → /items, True → /items/live
-    #     :param cmsLocaleId:    optional locale
-    #     :param offset:         optional paging offset
-    #     :param limit:          optional page size
-    #     :param name:           optional filter by name
-    #     :param slug:           optional filter by slug
-    #     :param lastPublished:  optional filter timestamp
-    #     :param sortBy:         optional sort field
-    #     :param sortOrder:      optional sort direction
+    #     :param collection_id: ID of the collection
+    #     :param cmsLocaleId:   optional locale override
+    #     :param offset:        result offset
+    #     :param limit:         max number of items to return
+    #     :param name:          filter by name
+    #     :param slug:          filter by slug
+    #     :param lastPublished: filter by lastPublished timestamp
+    #     :param sortBy:        field to sort by
+    #     :param sortOrder:     'asc' or 'desc'
+    #     :param live:          if True, list live items; otherwise list staged items
     #     """
-    #     # collect only the non‐None params
+    #     # build query params, include only non-None args
     #     query_params = {
     #         key: value
     #         for key, value in locals().items()
     #         if key not in ("self", "collection_id", "live") and value is not None
     #     }
     #
-    #     # choose the right endpoint
-    #     suffix = "/live" if live else ""
-    #     endpoint = f"/collections/{collection_id}/items{suffix}"
+    #     # choose endpoint path
+    #     path = "items/live" if live else "items"
+    #     endpoint = f"/collections/{collection_id}/{path}"
     #
     #     return self.connector.get(
     #         endpoint=endpoint,
@@ -237,62 +240,146 @@ class WebflowCMS(BaseWebflowEndpoint):
     #     }
     #     return self.connector.get(
     #         endpoint=f"/collections/{collection_id}/items/{item_id}/live",
+    #         query_params=query_params
     #     )
-    """The combined method"""
-    # def get_collection_item(self,
-    #                         collection_id,
-    #                         item_id,
-    #                         cmsLocaleId=None,
-    #                         live: bool = False):
+    """The combined method
+    not tested"""
+
+    # def get_collection_item(
+    #         self,
+    #         collection_id,
+    #         item_id,
+    #         cmsLocaleId=None,
+    #         live: bool = False
+    # ):
     #     """
-    #     Fetch a single CMS item, either draft or live.
+    #     Retrieve a staged collection item or its live version.
     #
-    #     :param collection_id:  ID of the collection
-    #     :param item_id:        ID of the item
-    #     :param cmsLocaleId:    optional locale
-    #     :param live:           False → /items/{item_id}, True → /items/{item_id}/live
+    #     :param collection_id: ID of the collection
+    #     :param item_id:       ID of the item
+    #     :param cmsLocaleId:   optional locale override
+    #     :param live:          if True, fetch the live item; otherwise fetch the staged item
     #     """
-    #     # 1) Build query‐params (only cmsLocaleId in this case)
+    #     # build query params (omit None and internal args)
     #     query_params = {
-    #         k: v
-    #         for k, v in locals().items()
-    #         if k not in ("self", "collection_id", "item_id", "live") and v is not None
+    #         key: value
+    #         for key, value in locals().items()
+    #         if key not in ("self", "collection_id", "item_id", "live") and value is not None
     #     }
     #
-    #     # 2) Choose suffix based on live flag
-    #     suffix = "/live" if live else ""
-    #     endpoint = f"/collections/{collection_id}/items/{item_id}{suffix}"
+    #     # choose endpoint based on `live` flag
+    #     endpoint = f"/collections/{collection_id}/items/{item_id}"
+    #     if live:
+    #         endpoint += "/live"
     #
-    #     # 3) Fire the request
     #     return self.connector.get(
     #         endpoint=endpoint,
     #         query_params=query_params
     #     )
-
-    # def create_collection_items(self, collection_id, skipInvalidFiles=None ):
+    """
+    The individual methods followed by the combined method underneath
+    Not tested
+    """
+    # def create_collection_items(
+    #         self,
+    #         collection_id,
+    #         items,
+    #         skipInvalidFiles: bool = True,
+    #         cmsLocaleId: str = None
+    # ):
+    #     """
+    #     Create one or more items in a collection (across multiple locales if needed).
+    #
+    #     :param collection_id:    ID of the collection (objectId)
+    #     :param items:            A dict representing a single item, or a list of dicts for multiple items.
+    #     :param skipInvalidFiles: If True (default), invalid files are skipped; if False, the request will fail on invalid files.
+    #     :param cmsLocaleId:      Optional locale override (e.g. "en-US").
+    #     """
+    #     # Build query parameters
     #     query_params = {
-    #         k: v
-    #         for k, v in locals().items()
-    #         if k not in ("self", "collection_id") and v is not None
-    #     }
-    #     payload = {
     #         key: value
     #         for key, value in locals().items()
-    #         if key not in ("self", "collection_id") and value is not None
+    #         if key not in ("self", "collection_id", "items") and value is not None
     #     }
     #
-    # def create_live_collection_items(self, collection_id,
-    #                                  skipInvalidFiles=None,):
+    #     headers = {"Content-Type": "application/json"}
+    #
+    #     return self.connector.post(
+    #         endpoint=f"/collections/{collection_id}/items",
+    #         json=items,
+    #         headers=headers,
+    #         query_params=query_params
+    #     )
+    #
+    # def create_live_collection_items(
+    #         self,
+    #         collection_id,
+    #         items,
+    #         skipInvalidFiles: bool = True,
+    #         cmsLocaleId: str = None
+    # ):
+    #     """
+    #     Create one or more items in a collection and immediately publish them live.
+    #
+    #     :param collection_id:    ID of the collection (objectId)
+    #     :param items:            A dict for a single item, or a list of dicts for multiple items.
+    #     :param skipInvalidFiles: If True (default), invalid files are skipped; if False, the request fails on invalid files.
+    #     :param cmsLocaleId:      Optional locale override (e.g. "en-US").
+    #     """
+    #     # Build query parameters (omit None and internal names)
     #     query_params = {
-    #         k: v
-    #         for k, v in locals().items()
-    #         if k not in ("self", "collection_id") and v is not None
-    #     }
-    #     payload = {
     #         key: value
     #         for key, value in locals().items()
-    #         if key not in ("self", "collection_id") and value is not None
+    #         if key not in ("self", "collection_id", "items") and value is not None
     #     }
+    #
+    #     headers = {"Content-Type": "application/json"}
+    #
+    #     return self.connector.post(
+    #         endpoint=f"/collections/{collection_id}/items/live",
+    #         json=items,
+    #         headers=headers,
+    #         query_params=query_params
+    #     )
+
+    """
+    The combined method
+    not tested
+    """
+
+    # def create_collection_items(
+    #         self,
+    #         collection_id,
+    #         items,
+    #         skipInvalidFiles: bool = True,
+    #         cmsLocaleId: str = None,
+    #         live: bool = False
+    # ):
+    #     """
+    #     Create one or more items in a collection, either staged or live.
+    #
+    #     :param collection_id:    ID of the collection (objectId)
+    #     :param items:            A dict for a single item, or a list of dicts for multiple items.
+    #     :param skipInvalidFiles: If True (default), invalid files are skipped; if False, the request fails on invalid files.
+    #     :param cmsLocaleId:      Optional locale override (e.g. "en-US").
+    #     :param live:             If True, items are published immediately (live); if False, items are staged.
+    #     """
+    #     # build query parameters (omit internal args and None values)
+    #     query_params = {
+    #         key: value
+    #         for key, value in locals().items()
+    #         if key not in ("self", "collection_id", "items", "live") and value is not None
+    #     }
+    #
+    #     headers = {"Content-Type": "application/json"}
+    #     path = "items/live" if live else "items"
+    #
+    #     return self.connector.post(
+    #         endpoint=f"/collections/{collection_id}/{path}",
+    #         json=items,
+    #         headers=headers,
+    #         query_params=query_params
+    #     )
 
 
     """Nothing to combine with
@@ -306,12 +393,12 @@ class WebflowCMS(BaseWebflowEndpoint):
     #     query_params = {
     #         k: v
     #         for k, v in locals().items()
-    #         if k not in ("self", "collection_id", "fieldData",) and v is not None
+    #         if k not in ("self", "collection_id", "fieldData") and v is not None
     #     }
     #     payload = {
     #         key: value
     #         for key, value in locals().items()
-    #         if key not in ("self", "collection_id",) and value is not None
+    #         if key not in ("self", "collection_id") and value is not None
     #     }
     #     return self.connector.post(
     #         endpoint=f"/collections/{collection_id}/items/bulk",
@@ -331,12 +418,12 @@ class WebflowCMS(BaseWebflowEndpoint):
     #     query_params = {
     #         k: v
     #         for k, v in locals().items()
-    #         if k not in ("self", "collection_id") and v is not None
+    #         if k not in ("self", "collection_id", "item_id") and v is not None
     #     }
     #     payload = {
     #         key: value
     #         for key, value in locals().items()
-    #         if key not in ("self", "collection_id",) and value is not None
+    #         if key not in ("self", "collection_id","item_id") and value is not None
     #     }
     #     headers = {"Content-Type": "application/json"}
     #     return self.connector.patch(
@@ -354,12 +441,12 @@ class WebflowCMS(BaseWebflowEndpoint):
     #     query_params = {
     #         k: v
     #         for k, v in locals().items()
-    #         if k not in ("self", "collection_id") and v is not None
+    #         if k not in ("self", "collection_id", "item_id") and v is not None
     #     }
     #     payload = {
     #         key: value
     #         for key, value in locals().items()
-    #         if key not in ("self", "collection_id",) and value is not None
+    #         if key not in ("self", "collection_id","item_id") and value is not None
     #     }
     #     headers = {"Content-Type": "application/json"}
     #     return self.connector.patch(
@@ -368,35 +455,54 @@ class WebflowCMS(BaseWebflowEndpoint):
     #         headers=headers,
     #         query_params=query_params
     #     )
-    """The combined method"""
-    # def update_single_collection_item(self,
-    #                                   collection_id,
-    #                                   item_id,
-    #                                   skipInvalidFiles=None,
-    #                                   cmsLocaleId=None,
-    #                                   isArchived=None,
-    #                                   isDraft=None,
-    #                                   fieldData=None,
-    #                                   live=False):
-    #     # collect everything but self & collection_id
+
+    """The combined method
+    Not tested"""
+
+    # def update_single_collection_item(
+    #         self,
+    #         collection_id,
+    #         item_id,
+    #         skipInvalidFiles=None,
+    #         cmsLocaleId=None,
+    #         isArchived=None,
+    #         isDraft=None,
+    #         fieldData=None,
+    #         live: bool = False
+    # ):
+    #     """
+    #     Update a staged item or its live version.
+    #
+    #     :param collection_id:     ID of the collection
+    #     :param item_id:           ID of the item
+    #     :param skipInvalidFiles:  whether to skip invalid files
+    #     :param cmsLocaleId:       optional locale override
+    #     :param isArchived:        mark item archived
+    #     :param isDraft:           mark item as draft
+    #     :param fieldData:         dict of field updates
+    #     :param live:              if True, patch the live item; otherwise patch staged
+    #     """
+    #     # build query parameters
     #     query_params = {
     #         k: v
     #         for k, v in locals().items()
-    #         if k not in ("self", "collection_id") and v is not None
+    #         if k not in ("self", "collection_id", "item_id", "live") and v is not None
     #     }
-    #     # same for the JSON body
-    #     payload = {
-    #         key: value
-    #         for key, value in locals().items()
-    #         if key not in ("self", "collection_id") and value is not None
-    #     }
-    #     headers = {"Content-Type": "application/json"}
     #
-    #     # choose suffix based on live flag
-    #     suffix = "/live" if live else ""
+    #     # build JSON payload
+    #     payload = {
+    #         k: v
+    #         for k, v in locals().items()
+    #         if k not in ("self", "collection_id", "item_id", "live") and v is not None
+    #     }
+    #
+    #     headers = {"Content-Type": "application/json"}
+    #     endpoint = f"/collections/{collection_id}/items/{item_id}"
+    #     if live:
+    #         endpoint += "/live"
     #
     #     return self.connector.patch(
-    #         endpoint=f"/collections/{collection_id}/items/{item_id}{suffix}",
+    #         endpoint=endpoint,
     #         json=payload,
     #         headers=headers,
     #         query_params=query_params
@@ -410,13 +516,13 @@ class WebflowCMS(BaseWebflowEndpoint):
     #     query_params = {
     #         k: v
     #         for k, v in locals().items()
-    #         if k not in ("self", "collection_id","skipInvalidFiles") and v is not None
+    #         if k not in ("self", "collection_id") and v is not None
     #     }
     #     # same for the JSON body
     #     payload = {
     #         key: value
     #         for key, value in locals().items()
-    #         if key not in ("self", "collection_id", "skipInvalidFiles") and value is not None
+    #         if key not in ("self", "collection_id") and value is not None
     #     }
     #     headers = {"Content-Type": "application/json"}
     #     return self.connector.patch(
@@ -432,13 +538,13 @@ class WebflowCMS(BaseWebflowEndpoint):
     #     query_params = {
     #         k: v
     #         for k, v in locals().items()
-    #         if k not in ("self", "collection_id", "skipInvalidFiles") and v is not None
+    #         if k not in ("self", "collection_id") and v is not None
     #     }
     #     # same for the JSON body
     #     payload = {
     #         key: value
     #         for key, value in locals().items()
-    #         if key not in ("self", "collection_id", "skipInvalidFiles") and value is not None
+    #         if key not in ("self", "collection_id") and value is not None
     #     }
     #     headers = {"Content-Type": "application/json"}
     #     return self.connector.patch(
@@ -447,30 +553,44 @@ class WebflowCMS(BaseWebflowEndpoint):
     #         headers=headers,
     #         query_params=query_params
     #     )
-    """The combined method"""
-    # def update_collection_items(self,
-    #                             collection_id,
-    #                             skipInvalidFiles=None,
-    #                             items=None,
-    #                             live=False):
-    #     # build query_params from everything except self, collection_id, skipInvalidFiles, live
+
+    """The combined method
+    not tested"""
+
+    # def update_collection_items(
+    #         self,
+    #         collection_id,
+    #         skipInvalidFiles=None,
+    #         items=None,
+    #         live: bool = False
+    # ):
+    #     """
+    #     Update staged collection items or live collection items in bulk.
+    #
+    #     :param collection_id:      ID of the collection
+    #     :param skipInvalidFiles:   whether to skip invalid files
+    #     :param items:              list of item dicts to update
+    #     :param live:               if True, target the live endpoint; otherwise the staged endpoint
+    #     """
+    #     # build query params (only include args that aren’t None)
     #     query_params = {
     #         k: v
     #         for k, v in locals().items()
-    #         if k not in ("self", "collection_id", "skipInvalidFiles", "live") and v is not None
+    #         if k not in ("self", "collection_id", "live") and v is not None
     #     }
-    #     # build payload from everything except self, collection_id, skipInvalidFiles, live
-    #     payload = {
-    #         key: value
-    #         for key, value in locals().items()
-    #         if key not in ("self", "collection_id", "skipInvalidFiles", "live") and value is not None
-    #     }
-    #     headers = {"Content-Type": "application/json"}
     #
-    #     # choose live vs draft endpoint
-    #     suffix = "/live" if live else ""
+    #     # build JSON payload (same filtering)
+    #     payload = {
+    #         k: v
+    #         for k, v in locals().items()
+    #         if k not in ("self", "collection_id", "live") and v is not None
+    #     }
+    #
+    #     headers = {"Content-Type": "application/json"}
+    #     path = "items/live" if live else "items"
+    #
     #     return self.connector.patch(
-    #         endpoint=f"/collections/{collection_id}/items{suffix}",
+    #         endpoint=f"/collections/{collection_id}/{path}",
     #         json=payload,
     #         headers=headers,
     #         query_params=query_params
@@ -499,22 +619,40 @@ class WebflowCMS(BaseWebflowEndpoint):
     #     }
     #     return self.connector.delete(
     #         endpoint=f"/collections/{collection_id}/items/{item_id}/live",
-    #         query_params=query_params
-    #     )
-    """The combined method"""
-    # def delete_single_collection_item(self,
-    #                                   collection_id,
-    #                                   item_id,
-    #                                   cmsLocaleId=None,
-    #                                   live=False):
+    #         query_params=query_params)
+
+    """The combined method
+    not tested"""
+
+    # def delete_single_collection_item(
+    #         self,
+    #         collection_id,
+    #         item_id,
+    #         cmsLocaleId=None,
+    #         live: bool = False
+    # ):
+    #     """
+    #     Delete a staged collection item or unpublish a live item.
+    #
+    #     :param collection_id: ID of the collection
+    #     :param item_id:    ID of the item
+    #     :param cmsLocaleId: optional locale override
+    #     :param live:       if True, unpublish the live item; if False, delete the staged item
+    #     """
+    #     # build query params (only include cmsLocaleId if given)
     #     query_params = {
     #         key: value
     #         for key, value in locals().items()
     #         if key not in ("self", "collection_id", "item_id", "live") and value is not None
     #     }
-    #     suffix = "/live" if live else ""
+    #
+    #     # choose endpoint path based on `live` flag
+    #     endpoint = f"/collections/{collection_id}/items/{item_id}"
+    #     if live:
+    #         endpoint += "/live"
+    #
     #     return self.connector.delete(
-    #         endpoint=f"/collections/{collection_id}/items/{item_id}{suffix}",
+    #         endpoint=endpoint,
     #         query_params=query_params
     #     )
 
@@ -530,49 +668,44 @@ class WebflowCMS(BaseWebflowEndpoint):
     #     return self.connector.delete(
     #         endpoint=f"/collections/{collection_id}/items",
     #         json=payload,
-    #         headers=headers
-    #     )
+    #         headers=headers)
     # def unpublish_live_collection_items(self, collection_id, items):
+    #      payload = {
+    #          key: value
+    #          for key, value in locals().items()
+    #         if key not in ("self", "collection_id") and value is not None
+    #      }
+    #      headers = {"Content-Type": "application/json"}
+    #      return self.connector.delete(
+    #          endpoint=f"/collections/{collection_id}/items/live",
+    #          json=payload,
+    #          headers=headers)
+
+    """The combined method
+    not tested"""
+
+    # def delete_collection_items(self, collection_id, items, live=False):
+    #     """
+    #     Delete or unpublish items in a collection.
+    #
+    #     :param collection_id: ID of the collection
+    #     :param items: list of item IDs to delete/unpublish
+    #     :param live: if True, unpublish live items; if False, delete staged items
+    #     """
     #     payload = {
     #         key: value
     #         for key, value in locals().items()
     #         if key not in ("self", "collection_id") and value is not None
     #     }
     #     headers = {"Content-Type": "application/json"}
-    #     return self.connector.delete(
-    #         endpoint=f"/collections/{collection_id}/items/live",
-    #     )
-    """The combined method"""
-    # def delete_collection_items(self,
-    #                             collection_id,
-    #                             items,
-    #                             live=False):
-    #     """
-    #     Delete (or unpublish) multiple items in a collection.
-    #
-    #     :param collection_id: ID of the CMS collection
-    #     :param items:         list of item‐dicts, each must include “id” (and optionally cmsLocaleId)
-    #     :param live:          False → delete draft items; True → unpublish live items
-    #     """
-    #     # Build the JSON payload from locals (excluding self, collection_id & live flag)
-    #     payload = {
-    #         key: value
-    #         for key, value in locals().items()
-    #         if key not in ("self", "collection_id", "live") and value is not None
-    #     }
-    #
-    #     headers = {"Content-Type": "application/json"}
-    #
-    #     # Pick the right endpoint suffix
-    #     suffix = "/live" if live else ""
-    #     endpoint = f"/collections/{collection_id}/items{suffix}"
+    #     path = "items/live" if live else "items"
     #
     #     return self.connector.delete(
-    #         endpoint=endpoint,
+    #         endpoint=f"/collections/{collection_id}/{path}",
     #         json=payload,
     #         headers=headers
     #     )
-    #
+
     """Nothing to combine with
         Not tested"""
     # def publish_collection_items(self, collection_id,
@@ -587,8 +720,7 @@ class WebflowCMS(BaseWebflowEndpoint):
     #     return self.connector.post(
     #         endpoint=f"/collections/{collection_id}/items/publish",
     #         json=payload,
-    #         headers=headers
-    #     )
+    #         headers=headers)
 
 
 
