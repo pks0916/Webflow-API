@@ -1,6 +1,6 @@
 from base import WebflowConnector
 from sites import WebflowSites
-# from cms import WebflowCMS
+from cms import WebflowCMS
 from tokens import WebflowToken
 from forms import WebflowForms
 from users import WebflowUsers
